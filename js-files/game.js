@@ -83,7 +83,7 @@ class Game {
         case 32: // Space Bar
           this.clearEverything();
           this.start();
-          this.projectile.drawProjectile();
+          this.projectile.shootsInMotion();
           break;
       }
     });

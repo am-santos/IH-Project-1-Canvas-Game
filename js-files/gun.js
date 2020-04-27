@@ -34,7 +34,7 @@ class Gun {
     this.leftEndOfGunY;
 
     // Gun shooting force
-    this.force = 10;
+    this.shootingForce = 100;
   }
 
   drawLeftGun() {
