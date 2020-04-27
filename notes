@@ -1,0 +1,33 @@
+BULK IDEAS:
+- Add bomb image and rotate it
+- Make char move through the ground
+- bombs change the ground
+- boundaries for characters to move
+- make no boundaries for gun shoots
+- each player have a team of chars
+- several different guns:
+    - cannon gun
+    - machine gun
+    - starts slow and multiplies in several shoots
+    - sticky gun (CRAZY)
+- points system questions:
+    - how much each shoot?
+    - how to deal with area damage.
+    - total life of char?
+    - display total points and each chra # of points?
+- Effects to Shoots:
+    - sound
+    - image
+
+CRAZY STUFF
+- Scale effects on gun fires (change zoom to follow the shoot and show the explosion)
+- Scale everything, see the shoot from long distance and then zoom when getting closer to target.
+
+
+
+
+
+NOTES:
+- Check video for effects ( IMPORTANT!! )
+- Use js files for images and audio?
+- 
