@@ -28,6 +28,7 @@ class Gun {
     // Pointing angle
     this.angle = -1 * (1 / 4) * Math.PI;
     this.speedOfAngleChanges = 0.05 * ((1 / 2) * Math.PI);
+    this.currentAngle = this.angle;
 
     // End of Gun
     this.leftEndOfGunX;
@@ -105,6 +106,8 @@ class Gun {
     } else if (this.angle < -1 * (1 / 2) * Math.PI) {
       this.angle += this.speedOfAngleChanges;
     }
+
+    this.currentAngle = this.angle;
   }
 
   /* drawProjectile(x, y) {

@@ -1,7 +1,8 @@
 /* 
 
 This class is set to,
-  - draw projectile
+- draw projectile
+context.beginPath();
   - projectile motion
   - collision detection
 
@@ -15,12 +16,12 @@ class Projectile {
 
     this.speed = 5; // Number of moved pixels per "time"
 
-    this.shootDisplaySpeed = 1000 / 10;
+    this.shootDisplaySpeed = 1000 / 30;
 
-    this.Fx = this.game.gun.shootingForce * Math.cos(this.game.gun.angle);
-    this.Fy = -1 * this.game.gun.shootingForce * Math.sin(this.game.gun.angle);
+    console.log('current Angle', this.game.gun.currentAngle);
+    console.log('Fx and Fy', this.Fx, this.Fy);
 
-    this.gravityForce = 15;
+    this.gravityForce = 10;
 
     this.time = 0;
   }
@@ -29,10 +30,10 @@ class Projectile {
     // This method has default values, makes it easy for testing.
 
     const context = this.game.context;
+    context.beginPath();
 
     context.save();
     context.fillStyle = 'orange';
-    context.beginPath();
     context.arc(x, y, this.game.gun.width, 0, 2 * Math.PI);
     context.closePath();
     context.stroke();
@@ -47,25 +48,30 @@ class Projectile {
 
     /* const gun = this.game.gun;
     
+
     const shootingForce = gun.shootingForce;
     */
+    this.Fx = this.game.gun.shootingForce * Math.cos(this.game.gun.currentAngle);
+    this.Fy = -1 * this.game.gun.shootingForce * Math.sin(this.game.gun.currentAngle);
 
+    console.log('current Angle', this.game.gun.currentAngle);
     // Values have to be instanciated inside of this method.
     this.x = this.game.gun.leftEndOfGunX;
     this.y = this.game.gun.leftEndOfGunY;
 
+    console.log('Fx and Fy', this.Fx, this.Fy);
     this.newX = this.x + this.Fx * this.time;
     this.newY = this.y - this.Fy * this.time + (1 / 2) * this.gravityForce * this.time ** 2;
 
     this.game.clearEverything();
     this.game.start();
     this.drawProjectile(this.newX, this.newY);
+
     this.time += 0.1;
 
     if (!this.collision()) {
       setTimeout(() => {
-        console.log(this.newY);
-        // this.shootsInMotion(this.time);
+        this.shootsInMotion(this.time);
       }, this.shootDisplaySpeed);
     }
   }
@@ -73,11 +79,13 @@ class Projectile {
   collision() {
     // Collision only checks if out of canvas or hit the ground.
     if (
-      this.newX + this.game.gun.width / 2 > this.game.width && // Right
-      this.newY + this.game.gun.width / 2 > this.game.height && // Bottom
-      this.newY < 0 // Top
+      this.newX + this.game.gun.width * 2 > this.game.width || // Right
+      this.newY + this.game.gun.width * 2 > this.game.height - this.game.ground.groundHeight || // Bottom
+      this.newY - this.game.gun.width * 2 < 0 // Top
     ) {
       return true;
+    } else {
+      return false;
     }
   }
 }
