@@ -56,7 +56,7 @@ class Character {
     context.restore();
   }
 
-  drawRightCharacter() {
+  /* drawRightCharacter() {
     const game = this.game;
     const context = game.context;
     // Character Y coordinate
@@ -67,7 +67,7 @@ class Character {
     context.fillStyle = 'brown';
     context.fillRect(game.width - this.x, this.y, this.width, this.height);
     context.restore();
-  }
+  } */
 
   move(direction) {
     // Movement conditions

@@ -35,7 +35,7 @@ class Gun {
     this.leftEndOfGunY;
 
     // Gun shooting force
-    this.shootingForce = 100;
+    this.shootingForce = 80;
   }
 
   drawLeftGun() {
@@ -65,7 +65,7 @@ class Gun {
     context.restore();
   }
 
-  drawRightGun() {
+  /*   drawRightGun() {
     const game = this.game;
     const context = game.context;
 
@@ -90,7 +90,7 @@ class Gun {
     context.closePath();
 
     context.restore();
-  }
+  } */
 
   points(direction) {
     // Moves gun direction
@@ -108,6 +108,13 @@ class Gun {
     }
 
     this.currentAngle = this.angle;
+  }
+
+  pointingPosition() {
+    const headOfGunX = this.leftEndOfGunX;
+    const headOfGunY = this.leftEndOfGunY;
+
+    return [headOfGunX, headOfGunY];
   }
 
   /* drawProjectile(x, y) {

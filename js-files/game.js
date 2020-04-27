@@ -37,16 +37,12 @@ class Game {
   }
 
   start() {
-    this.ground.draw();
-    this.character.drawLeftCharacter();
-    this.gun.drawLeftGun();
-    // this.character.drawRightCharacter();
-    // this.gun.drawRightGun();
+    this.reset();
+    this.drawCurrentStatus();
   }
 
   reset() {
     this.character = new Character(this);
-
     this.ground = new Ground(this);
     this.gun = new Gun(this);
     this.projectile = new Projectile(this);
@@ -63,43 +59,50 @@ class Game {
         case 37: // Left
           this.character.move('left');
           this.clearEverything();
-          this.start();
+          this.drawCurrentStatus();
           break;
         case 39: // Right
           this.character.move('right');
           this.clearEverything();
-          this.start();
+          this.drawCurrentStatus();
           break;
         case 38: // Up
           this.gun.points('up');
           this.clearEverything();
-          this.start();
+          this.drawCurrentStatus();
           break;
         case 40: // Down
           this.gun.points('down');
           this.clearEverything();
-          this.start();
+          this.drawCurrentStatus();
           break;
         case 32: // Space Bar
           this.clearEverything();
-          this.start();
-          this.projectile.shootsInMotion();
+          this.drawCurrentStatus();
+          this.projectile.shootsInMotion(); // Need to freeze entire game while running this method!
+          // this.gun.pointingPosition();
+          // returns [x,y] coordinates of gun's point (head)
           break;
       }
     });
   }
 
-  /* pointingGun() {
-    window.addEventListener('keydown', (event) => {
-      const keyCode = event.keyCode;
-      switch (keyCode) {
-        case 38: // Up
-          this.gun.move('up');
-          break;
-        case 40: // Down
-          this.gun.move('down');
-          break;
-      }
-    });
-  } */
+  drawCurrentStatus() {
+    this.ground.draw();
+    this.character.drawLeftCharacter();
+    this.gun.drawLeftGun();
+    // this.character.drawRightCharacter();
+    // this.gun.drawRightGun();
+  }
 }
+/*
+One Method does all??
+  - Pointing
+  - Shooting (STOP entire game to do this)
+      - moves projectile (DONE: Equations are on projectile.shootsinmotion)
+      - checks collision (DONE: with walls and ground)
+      - cleans (DONE)
+      - draw current game status (Need a method for this)
+      - repeats all (DONE)
+
+*/

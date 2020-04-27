@@ -18,21 +18,16 @@ class Projectile {
 
     this.shootDisplaySpeed = 1000 / 30;
 
-    console.log('current Angle', this.game.gun.currentAngle);
-    console.log('Fx and Fy', this.Fx, this.Fy);
-
     this.gravityForce = 10;
 
     this.time = 0;
   }
 
   drawProjectile(x, y) {
-    // This method has default values, makes it easy for testing.
-
     const context = this.game.context;
-    context.beginPath();
 
     context.save();
+    context.beginPath();
     context.fillStyle = 'orange';
     context.arc(x, y, this.game.gun.width, 0, 2 * Math.PI);
     context.closePath();
@@ -41,25 +36,14 @@ class Projectile {
     context.restore();
   }
 
-  shootsInMotion(time = this.time) {
-    // Apply some crazy equations on previous x and y value of projectile
-    // Draw new position of projectile
-    // Give projectile new values for x and y
-
-    /* const gun = this.game.gun;
-    
-
-    const shootingForce = gun.shootingForce;
-    */
+  shootsInMotion() {
     this.Fx = this.game.gun.shootingForce * Math.cos(this.game.gun.currentAngle);
     this.Fy = -1 * this.game.gun.shootingForce * Math.sin(this.game.gun.currentAngle);
 
-    console.log('current Angle', this.game.gun.currentAngle);
     // Values have to be instanciated inside of this method.
     this.x = this.game.gun.leftEndOfGunX;
     this.y = this.game.gun.leftEndOfGunY;
 
-    console.log('Fx and Fy', this.Fx, this.Fy);
     this.newX = this.x + this.Fx * this.time;
     this.newY = this.y - this.Fy * this.time + (1 / 2) * this.gravityForce * this.time ** 2;
 
@@ -71,7 +55,7 @@ class Projectile {
 
     if (!this.collision()) {
       setTimeout(() => {
-        this.shootsInMotion(this.time);
+        this.shootsInMotion();
       }, this.shootDisplaySpeed);
     }
   }
