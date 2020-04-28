@@ -18,103 +18,90 @@ Each Gun will have,
 
 */
 class Gun {
-  constructor(game) {
+  constructor(game, x, y, width, height, orientation) {
     this.game = game;
+
+    // Char current values of,
+    this.x = x; //Coordinates of body
+    this.y = y || 360; //Coordinates of body
+    this.width = width; // char body
+    this.height = height; // char body
+    this.orientation = orientation; // where is looking at
 
     // Gun size (aka stroke length and width)
     this.length = 30;
-    this.width = 5;
+    this.gunWidth = 5;
 
     // Pointing angle
     this.angle = -1 * (1 / 4) * Math.PI;
     this.speedOfAngleChanges = 0.05 * ((1 / 2) * Math.PI);
     this.currentAngle = this.angle;
 
-    // End of Gun
-    this.leftEndOfGunX;
-    this.leftEndOfGunY;
-
     // Gun shooting force
     this.shootingForce = 80;
   }
 
-  drawLeftGun() {
+  extractVarsToProjectile() {
+    return [this.EndOfGunX, this.EndOfGunY, this.orientation, this.currentAngle, this.shootingForce, this.gunWidth];
+  }
+
+  draw() {
     const game = this.game;
     const context = game.context;
 
-    // Starting coordinates of gun. (same as, center of the character)
-    this.leftCenterX = game.character.x + game.character.width / 2;
-    this.leftCenterY = game.character.y + game.character.height / 2;
+    if (this.orientation === 'right') {
+      // Starting coordinates of gun. (same as, center of the character)
+      this.CenterX = this.x + this.width / 2;
+      this.CenterY = this.y + this.height / 2;
 
-    // Final coordinates of Gun. (using 45º as default)
-    this.leftEndOfGunX = this.leftCenterX + this.length * Math.cos(this.angle);
-    this.leftEndOfGunY = this.leftCenterY + this.length * Math.sin(this.angle);
+      // Final coordinates of Gun. (using 45º as default)
+      this.EndOfGunX = this.CenterX + this.length * Math.cos(this.currentAngle);
+      this.EndOfGunY = this.CenterY + this.length * Math.sin(this.currentAngle);
+    } else if (this.orientation === 'left') {
+      // Starting coordinates of gun. (same as, center of the character)
+      this.CenterX = game.width - this.x + this.width / 2;
+      this.CenterY = this.y + this.height / 2;
+
+      // Final coordinates of Gun. (using 45º as default)
+      this.EndOfGunX = this.CenterX - this.length * Math.cos(this.currentAngle);
+      this.EndOfGunY = this.CenterY - this.length * -1 * Math.sin(this.currentAngle);
+    }
 
     // Draw gun
     context.save();
 
-    context.lineWidth = this.width;
+    context.lineWidth = this.gunWidth;
     context.strokeStyle = 'black';
 
     context.beginPath();
-    context.moveTo(this.leftCenterX, this.leftCenterY);
-    context.lineTo(this.leftEndOfGunX, this.leftEndOfGunY);
+    context.moveTo(this.CenterX, this.CenterY);
+    context.lineTo(this.EndOfGunX, this.EndOfGunY);
     context.stroke();
     context.closePath();
 
     context.restore();
   }
 
-  /*   drawRightGun() {
-    const game = this.game;
-    const context = game.context;
+  pointsTo(direction) {
+    if (!this.game.eventRuns) {
+      // Prevents it from running when projectile is in motion.
 
-    // Starting coordinates of gun. (same as, center of the character)
-    this.rightCenterX = game.width - game.character.x + game.character.width / 2;
-    this.rightCenterY = game.character.y + game.character.height / 2;
+      // Moves gun direction
+      if (direction === 'up') {
+        this.angle -= this.speedOfAngleChanges;
+      } else if (direction === 'down') {
+        this.angle += this.speedOfAngleChanges;
+      }
 
-    // Final coordinates of Gun. (using 45º as default)
-    this.rightEndOfGunX = this.rightCenterX - this.length * Math.cos(this.angle);
-    this.rightEndOfGunY = this.rightCenterY - this.length * Math.sin(this.angle);
+      // Boundaries of gun movement, between 0 and PI/2.
+      if (this.angle > 0) {
+        this.angle = 0;
+      } else if (this.angle < -1 * (1 / 2) * Math.PI) {
+        this.angle += this.speedOfAngleChanges;
+      }
 
-    // Draw gun
-    context.save();
-
-    context.lineWidth = this.width;
-    context.strokeStyle = 'black';
-
-    context.beginPath();
-    context.moveTo(this.rightCenterX, this.rightCenterY);
-    context.lineTo(this.rightEndOfGunX, this.rightEndOfGunY);
-    context.stroke();
-    context.closePath();
-
-    context.restore();
-  } */
-
-  points(direction) {
-    // Moves gun direction
-    if (direction === 'up') {
-      this.angle -= this.speedOfAngleChanges;
-    } else if (direction === 'down') {
-      this.angle += this.speedOfAngleChanges;
+      this.currentAngle = this.angle;
     }
-
-    // Boundaries of gun movement, between 0 and PI/2.
-    if (this.angle > 0) {
-      this.angle = 0;
-    } else if (this.angle < -1 * (1 / 2) * Math.PI) {
-      this.angle += this.speedOfAngleChanges;
-    }
-
-    this.currentAngle = this.angle;
-  }
-
-  pointingPosition() {
-    const headOfGunX = this.leftEndOfGunX;
-    const headOfGunY = this.leftEndOfGunY;
-
-    return [headOfGunX, headOfGunY];
   }
 
   /* drawProjectile(x, y) {
