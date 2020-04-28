@@ -1,3 +1,13 @@
-const a = [1, 2, 3, 4, 5];
+let a = [];
+for (let i = 0; i < 50; i++) {
+  a.push(i);
+}
 
-console.log(...a);
+let remainder = [];
+for (let i = 0; i < 50; i++) {
+  remainder.push(i % 6);
+}
+
+// console.log(remainder);
+
+console.log(typeof 1 % 6);

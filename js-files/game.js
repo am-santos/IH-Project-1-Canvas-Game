@@ -38,7 +38,7 @@ class Game {
 
     this.eventRuns = false;
 
-    // this.characterMoves();
+    this.characterTurn = 0;
   }
 
   createsTeam(teamName, teamSize, orientation) {
@@ -69,9 +69,43 @@ class Game {
     }
   }
 
+  gameLogic() {
+    let tempTurn = this.characterTurn;
+    console.log('inside gamelogic - characterturn', this.characterTurn);
+    console.log('inside gamelogic - tempturn', tempTurn);
+    switch (this.characterTurn % 6) {
+      case 0 % 6: // Team 1 - 0
+        this.characterPlays(this.team1, 0);
+        break;
+      case 1 % 6: // Team 2 - 0
+        this.characterPlays(this.team2, 0);
+        break;
+      case 2 % 6: // Team 1 - 1
+        this.characterPlays(this.team1, 1);
+        break;
+      case 3 % 6: // Team 2 - 1
+        this.characterPlays(this.team2, 1);
+        break;
+      case 4 % 6: // Team 1 - 2
+        this.characterPlays(this.team1, 2);
+        break;
+      case 5 % 6: // Team 2 - 2
+        this.characterPlays(this.team2, 2);
+        break;
+    }
+
+    if (tempTurn < this.characterTurn && this.characterTurn >= 6) {
+      setTimeout(() => {
+        this.gameLogic();
+      }, 1000);
+    }
+    // console.log('inside if', this.characterTurn);
+    // this.gameLogic();
+  }
+
   start() {
     this.reset();
-    this.characterPlays(this.team2, 1);
+    this.gameLogic();
   }
 
   reset() {
@@ -103,7 +137,7 @@ class Game {
     // teamName - array with team chars
     // charNumber - specific char that is being refered
     // className - {char,gun,proj} - that represents each class specifications.
-
+    this.charInMotion = true;
     let updateValues;
     console.log('characterPlays', teamName);
     window.addEventListener('keydown', (event) => {
@@ -184,20 +218,4 @@ class Game {
       }
     });
   } */
-
-  createShooter() {
-    /* 
-    Shooter is one element that includes Character, Gun and Projectile.
-    Projectile depends on Gun that depends on Character.
-    
-    Each shooter should be independent from other shooter's actions.
-    
-    Char (x,y,orientation)
-      '-> Gun (needs from character the following vars: x,y,width,height,orientation)
-            '-> Projectile (needs from gun the following vars: shootingForce, endOfGun Coordinates, currentAngle)
-    
-    
-    RETURN Character???
-    */
-  }
 }

@@ -80,6 +80,8 @@ class Projectile {
       this.newY - this.gunWidth * 2 < 0 // Top
     ) {
       this.game.eventRuns = false;
+      this.game.characterTurn++;
+      console.log('new characterturn value', this.game.characterTurn);
       return true;
     } else {
       return false;
