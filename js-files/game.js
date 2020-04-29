@@ -69,10 +69,20 @@ class Game {
     }
   }
 
+  drawTeamsLife(team) {
+    for (let teamchar of team) {
+      for (let element in teamchar) {
+        if (element === 'char') {
+          teamchar[element].drawCharacterLife();
+        }
+      }
+    }
+  }
+
   gameLogic() {
-    let tempTurn = this.characterTurn;
-    console.log('inside gamelogic - characterturn', this.characterTurn);
-    console.log('inside gamelogic - tempturn', tempTurn);
+    //let tempTurn = this.characterTurn;
+    // console.log('inside gamelogic - characterturn', this.characterTurn);
+    // console.log('inside gamelogic - tempturn', tempTurn);
     switch (this.characterTurn % 6) {
       case 0: // Team 1 - 0
         this.characterPlays(this.team1, 0, true);
@@ -124,9 +134,11 @@ class Game {
 
     this.createsTeam(this.team1, 3, 'right');
     this.drawTeam(this.team1);
+    this.drawTeamsLife(this.team1);
 
     this.createsTeam(this.team2, 3, 'left');
     this.drawTeam(this.team2);
+    this.drawTeamsLife(this.team2);
   }
 
   clearEverything() {
@@ -137,6 +149,8 @@ class Game {
     this.ground.draw();
     this.drawTeam(this.team1);
     this.drawTeam(this.team2);
+    this.drawTeamsLife(this.team1);
+    this.drawTeamsLife(this.team2);
   }
 
   characterPlays(teamName, charNumber, run) {
@@ -145,9 +159,8 @@ class Game {
     // charNumber - specific char that is being refered
     // className - {char,gun,proj} - that represents each class specifications.
     let runFunction = run;
-    this.charInMotion = true;
+    //this.charInMotion = true;
     let updateValues;
-    console.log('characterPlays', teamName);
     window.addEventListener('keydown', (event) => {
       // event.preventDefault();
       if (runFunction) {
@@ -185,44 +198,10 @@ class Game {
             updateValues = teamName[charNumber]['gun'].extractVarsFromGun();
             teamName[charNumber]['proj'] = new Projectile(this, ...updateValues);
 
-            teamName[charNumber]['proj'].shootsInMotion();
+            teamName[charNumber]['proj'].shootsInMotion(teamName);
             runFunction = false;
         }
       }
     });
   }
-
-  // Previous logic, working
-  /* characterMoves() {
-    window.addEventListener('keydown', (event) => {
-      // event.preventDefault();
-      const keyCode = event.keyCode;
-      switch (keyCode) {
-        case 37: // Left
-          this.character.move('left');
-          this.clearEverything();
-          this.drawCurrentStatus();
-          break;
-        case 39: // Right
-          this.character.move('right');
-          this.clearEverything();
-          this.drawCurrentStatus();
-          break;
-        case 38: // Up
-          this.gun.pointsTo('up');
-          this.clearEverything();
-          this.drawCurrentStatus();
-          break;
-        case 40: // Down
-          this.gun.pointsTo('down');
-          this.clearEverything();
-          this.drawCurrentStatus();
-          break;
-        case 32: // Space Bar
-          this.clearEverything();
-          this.drawCurrentStatus();
-          this.projectile.shootsInMotion();
-      }
-    });
-  } */
 }

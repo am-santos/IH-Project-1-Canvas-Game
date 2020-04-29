@@ -24,6 +24,9 @@ class Character {
     this.width = 20;
     this.height = 40;
 
+    //Character Life
+    this.life = 100;
+
     // Movement Speed
     this.speed = speed || 5;
 
@@ -33,6 +36,36 @@ class Character {
   // extractVarsToGun() {
   extractVarsFromChar() {
     return [this.x, this.y, this.width, this.height, this.orientation];
+  }
+
+  drawCharacterLife() {
+    const game = this.game;
+    const context = game.context;
+
+    // Character Y coordinate
+    this.y = this.game.height - this.height - this.game.ground.groundHeight;
+
+    context.save();
+    context.fillStyle = 'lime';
+    context.font = '15px serif';
+    let tempXcoor;
+    if (this.orientation === 'right') {
+      if (this.life < 100) {
+        context.fillText(this.life, this.x + 2, this.y + this.height + this.width, this.width);
+        // fillText coordinates are the left bottom corner of displaying text.
+      } else {
+        context.fillText(this.life, this.x - 1, this.y + this.height + this.width, this.width);
+      }
+    } else if (this.orientation === 'left') {
+      if (this.life < 100) {
+        context.fillText(this.life, this.game.width - this.x - 2, this.y + this.height + this.width, this.width);
+        // fillText coordinates are the left bottom corner of displaying text.
+      } else {
+        context.fillText(this.life, this.game.width - this.x + 1, this.y + this.height + this.width, this.width);
+      }
+    }
+
+    context.restore();
   }
 
   draw() {
@@ -49,8 +82,8 @@ class Character {
       context.fillRect(this.x, this.y, this.width, this.height);
 
       // character hat
-      context.strokeStyle = 'green';
-      context.fillStyle = 'green';
+      context.strokeStyle = 'darkgreen';
+      context.fillStyle = 'darkgreen';
 
       context.beginPath();
       context.moveTo(this.x - 15, this.y); // Back size of hat

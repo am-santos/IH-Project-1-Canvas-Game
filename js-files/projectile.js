@@ -73,16 +73,15 @@ class Projectile {
 
   collision(shootingTeam) {
     //Checks if hit the enemy
-    /* if (this.collisionWithEnimies) {
-      return true;
-    } */
 
+    console.log('collision with Enemies', this.collisionWithEnimies());
     // checks if out of canvas or hit the ground.
     if (
       this.newX + this.gunWidth * 2 > this.game.width || // Right
       this.newX - this.gunWidth * 2 < 0 || // Left
       this.newY + this.gunWidth * 2 > this.game.height - this.game.ground.groundHeight || // Ground
       this.newY - this.gunWidth * 2 < 0 // Top
+      // this.collisionWithEnimies(shootingTeam) // Method that checks collision with enemies.
     ) {
       this.game.eventRuns = false;
       this.game.characterTurn++;
@@ -98,15 +97,50 @@ class Projectile {
     // Required variables:
     // ball location,
     // Enemies location
+    let teamVarsFromChar = [];
 
     if (this.game.team1 === shootingTeam) {
       //Check if collided with team2
-      // ball.x + ball.radius < block.x (left side of block) ||
-      // ball.x - ball.radius < block.x + block.width (right side of black)
-      // ball.y + ball.radius > black.y
+      for (let teamchar of this.game.team2) {
+        for (let obj in teamchar) {
+          if (obj === 'char') {
+            teamVarsFromChar.push(teamchar[obj].extractVarsFromChar());
+          }
+          // [this.x, this.y, this.width, this.height, this.orientation]
+        }
+      }
+      teamVarsFromChar.push(this.game.team2);
     } else if (this.game.team2 === shootingTeam) {
       //Check if collided with team1
+      for (let teamchar of this.game.team1) {
+        for (let obj in teamchar) {
+          if (obj === 'char') {
+            teamVarsFromChar.push(teamchar[obj].extractVarsFromChar());
+            // [this.x, this.y, this.width, this.height, this.orientation]
+          }
+        }
+      }
+      teamVarsFromChar.push(this.game.team1);
     }
+
+    // ball.x + ball.radius < block.x && (left side of block)
+    // ball.x - ball.radius < block.x + block.width && (right side of the moon)
+    // ball.y - ball.radius < block.y
+    for (let char = 0; char < teamVarsFromChar.length; char++) {
+      console.log('im inside for lop');
+      if (
+        (this.newX + this.gunWidth > teamVarsFromChar[char][0] &&
+          this.newY + this.gunWidth > teamVarsFromChar[char][1]) ||
+        (this.newX - this.gunWidth < teamVarsFromChar[char][0] + teamVarsFromChar[char][2] &&
+          this.newY + this.gunWidth > teamVarsFromChar[char][1])
+      ) {
+        // char was hit by this ball!!
+        // return [char, teamVarsFromChar[teamVarsFromChar.length - 1]];
+        console.log('im truthy');
+        return true;
+      }
+    }
+    return false;
   }
 
   drawExplosion() {

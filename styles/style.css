@@ -1,0 +1,21 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  font-family: sans-serif;
+}
+
+section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+button {
+  width: 200px;
+  height: 50px;
+  font-size: 2em;
+}

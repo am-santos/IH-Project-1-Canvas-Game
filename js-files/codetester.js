@@ -9,5 +9,14 @@ for (let i = 0; i < 50; i++) {
 }
 
 // console.log(remainder);
+let b = [];
+function noname() {
+  if (b) {
+    return typeof b;
+  }
+}
 
-console.log(typeof 1 % 6);
+const name = noname();
+if (name) {
+  console.log(name);
+}

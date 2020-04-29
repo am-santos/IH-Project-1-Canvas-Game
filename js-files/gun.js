@@ -32,6 +32,9 @@ class Gun {
     this.length = 30;
     this.gunWidth = 5;
 
+    // Gun Damage
+    this.damage = 67;
+
     // Pointing angle
     this.angle = -1 * (1 / 4) * Math.PI;
     this.speedOfAngleChanges = 0.05 * ((1 / 2) * Math.PI);
