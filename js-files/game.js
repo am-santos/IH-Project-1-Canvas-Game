@@ -46,9 +46,9 @@ class Game {
 
     for (let i = 0; i < teamSize; i++) {
       const char = new Character(this, orient, 50 + i * 70);
-      const gunVars = char.extractVarsToGun();
+      const gunVars = char.extractVarsFromChar();
       const gun = new Gun(this, ...gunVars);
-      const projectileVars = gun.extractVarsToProjectile();
+      const projectileVars = gun.extractVarsFromGun();
       const proj = new Projectile(this, ...projectileVars);
 
       teamName.push({ char, gun, proj });
@@ -74,38 +74,45 @@ class Game {
     console.log('inside gamelogic - characterturn', this.characterTurn);
     console.log('inside gamelogic - tempturn', tempTurn);
     switch (this.characterTurn % 6) {
-      case 0 % 6: // Team 1 - 0
-        this.characterPlays(this.team1, 0);
+      case 0: // Team 1 - 0
+        this.characterPlays(this.team1, 0, true);
         break;
-      case 1 % 6: // Team 2 - 0
-        this.characterPlays(this.team2, 0);
+      case 1: // Team 2 - 0
+        this.characterPlays(this.team2, 0, true);
         break;
-      case 2 % 6: // Team 1 - 1
-        this.characterPlays(this.team1, 1);
+      case 2: // Team 1 - 1
+        this.characterPlays(this.team1, 1, true);
         break;
-      case 3 % 6: // Team 2 - 1
-        this.characterPlays(this.team2, 1);
+      case 3: // Team 2 - 1
+        this.characterPlays(this.team2, 1, true);
         break;
-      case 4 % 6: // Team 1 - 2
-        this.characterPlays(this.team1, 2);
+      case 4: // Team 1 - 2
+        this.characterPlays(this.team1, 2, true);
         break;
-      case 5 % 6: // Team 2 - 2
-        this.characterPlays(this.team2, 2);
+      case 5: // Team 2 - 2
+        this.characterPlays(this.team2, 2, true);
         break;
     }
 
-    if (tempTurn < this.characterTurn && this.characterTurn >= 6) {
+    /* if (tempTurn < this.characterTurn && this.characterTurn <= 6) {
       setTimeout(() => {
+        console.log('inside settimeout - tempturn', tempTurn);
         this.gameLogic();
       }, 1000);
-    }
-    // console.log('inside if', this.characterTurn);
-    // this.gameLogic();
+    } */
   }
+  /*	
+  loop(timestamp) {
+    this.gameLogic();
+    window.requestAnimationFrame((timestamp) => this.loop(timestamp));
+  }
+  */
 
   start() {
     this.reset();
     this.gameLogic();
+    //this.loop();
+    //this.characterPlays(this.team2, 1);
   }
 
   reset() {
@@ -132,55 +139,55 @@ class Game {
     this.drawTeam(this.team2);
   }
 
-  characterPlays(teamName, charNumber) {
+  characterPlays(teamName, charNumber, run) {
     // teamName[charNumber][className].method
     // teamName - array with team chars
     // charNumber - specific char that is being refered
     // className - {char,gun,proj} - that represents each class specifications.
+    let runFunction = run;
     this.charInMotion = true;
     let updateValues;
     console.log('characterPlays', teamName);
     window.addEventListener('keydown', (event) => {
       // event.preventDefault();
-      const keyCode = event.keyCode;
-      switch (keyCode) {
-        case 37: // Left
-          teamName[charNumber]['char'].move('left');
-          updateValues = teamName[charNumber]['char'].extractVarsToGun();
-          teamName[charNumber]['gun'] = new Gun(this, ...updateValues);
-          this.clearEverything();
-          this.drawCurrentStatus();
-          break;
-        case 39: // Right
-          teamName[charNumber]['char'].move('right');
-          updateValues = teamName[charNumber]['char'].extractVarsToGun();
-          teamName[charNumber]['gun'] = new Gun(this, ...updateValues);
-          this.clearEverything();
-          this.drawCurrentStatus();
-          break;
-        case 38: // Up
-          teamName[charNumber]['gun'].pointsTo('up');
-          // updateValues = teamName[charNumber]['char'].extractVarsToGun();
-          // teamName[charNumber]['gun'] = new Projectile(this, ...updateValues);
+      if (runFunction) {
+        const keyCode = event.keyCode;
+        switch (keyCode) {
+          case 37: // Left
+            teamName[charNumber]['char'].move('left');
+            updateValues = teamName[charNumber]['char'].extractVarsFromChar();
+            teamName[charNumber]['gun'] = new Gun(this, ...updateValues);
+            this.clearEverything();
+            this.drawCurrentStatus();
+            break;
+          case 39: // Right
+            teamName[charNumber]['char'].move('right');
+            updateValues = teamName[charNumber]['char'].extractVarsFromChar();
+            teamName[charNumber]['gun'] = new Gun(this, ...updateValues);
+            this.clearEverything();
+            this.drawCurrentStatus();
+            break;
+          case 38: // Up
+            teamName[charNumber]['gun'].pointsTo('up');
 
-          this.clearEverything();
-          this.drawCurrentStatus();
-          break;
-        case 40: // Down
-          teamName[charNumber]['gun'].pointsTo('down');
-          // updateValues = teamName[charNumber]['char'].extractVarsToGun();
-          // teamName[charNumber]['gun'] = new Projectile(this, ...updateValues);
+            this.clearEverything();
+            this.drawCurrentStatus();
+            break;
+          case 40: // Down
+            teamName[charNumber]['gun'].pointsTo('down');
 
-          this.clearEverything();
-          this.drawCurrentStatus();
-          break;
-        case 32: // Space Bar
-          this.clearEverything();
-          this.drawCurrentStatus();
-          updateValues = teamName[charNumber]['gun'].extractVarsToProjectile();
-          teamName[charNumber]['proj'] = new Projectile(this, ...updateValues);
+            this.clearEverything();
+            this.drawCurrentStatus();
+            break;
+          case 32: // Space Bar
+            this.clearEverything();
+            this.drawCurrentStatus();
+            updateValues = teamName[charNumber]['gun'].extractVarsFromGun();
+            teamName[charNumber]['proj'] = new Projectile(this, ...updateValues);
 
-          teamName[charNumber]['proj'].shootsInMotion();
+            teamName[charNumber]['proj'].shootsInMotion();
+            runFunction = false;
+        }
       }
     });
   }

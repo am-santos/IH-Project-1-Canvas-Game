@@ -38,7 +38,7 @@ class Projectile {
     context.restore();
   }
 
-  shootsInMotion() {
+  shootsInMotion(shootingTeam) {
     this.game.eventRuns = true;
 
     if (this.orientation === 'right') {
@@ -64,27 +64,58 @@ class Projectile {
 
     this.time += 0.1;
 
-    if (!this.collision()) {
+    if (!this.collision(shootingTeam)) {
       setTimeout(() => {
         this.shootsInMotion();
       }, this.shootDisplaySpeed);
     }
   }
 
-  collision() {
-    // Collision only checks if out of canvas or hit the ground.
+  collision(shootingTeam) {
+    //Checks if hit the enemy
+    /* if (this.collisionWithEnimies) {
+      return true;
+    } */
+
+    // checks if out of canvas or hit the ground.
     if (
-      // this.newX + this.gunWidth * 2 > this.game.width || // Right
+      this.newX + this.gunWidth * 2 > this.game.width || // Right
       this.newX - this.gunWidth * 2 < 0 || // Left
       this.newY + this.gunWidth * 2 > this.game.height - this.game.ground.groundHeight || // Ground
       this.newY - this.gunWidth * 2 < 0 // Top
     ) {
       this.game.eventRuns = false;
       this.game.characterTurn++;
+      this.game.gameLogic();
       console.log('new characterturn value', this.game.characterTurn);
       return true;
     } else {
       return false;
     }
+  }
+
+  collisionWithEnimies(shootingTeam) {
+    // Required variables:
+    // ball location,
+    // Enemies location
+
+    if (this.game.team1 === shootingTeam) {
+      //Check if collided with team2
+      // ball.x + ball.radius < block.x (left side of block) ||
+      // ball.x - ball.radius < block.x + block.width (right side of black)
+      // ball.y + ball.radius > black.y
+    } else if (this.game.team2 === shootingTeam) {
+      //Check if collided with team1
+    }
+  }
+
+  drawExplosion() {
+    // ball location
+    // explosion radius
+  }
+
+  damage() {}
+  friendlyFire() {
+    // Nice to have feature!
   }
 }

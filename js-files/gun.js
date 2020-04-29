@@ -41,7 +41,7 @@ class Gun {
     this.shootingForce = 80;
   }
 
-  extractVarsToProjectile() {
+  extractVarsFromGun() {
     return [this.EndOfGunX, this.EndOfGunY, this.orientation, this.currentAngle, this.shootingForce, this.gunWidth];
   }
 

@@ -30,7 +30,8 @@ class Character {
     this.orientation = orientation || 'right';
   }
 
-  extractVarsToGun() {
+  // extractVarsToGun() {
+  extractVarsFromChar() {
     return [this.x, this.y, this.width, this.height, this.orientation];
   }
 
