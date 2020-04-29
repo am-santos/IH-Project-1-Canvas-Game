@@ -18,8 +18,11 @@ Each Gun will have,
 
 */
 class Gun {
-  constructor(game, x, y, width, height, orientation) {
-    this.game = game;
+  constructor(character) {
+    this.character = character;
+    const { x, y, width, height, orientation } = this.character;
+
+    this.game = character.game;
 
     // Char current values of,
     this.x = x; //Coordinates of body
@@ -42,6 +45,8 @@ class Gun {
 
     // Gun shooting force
     this.shootingForce = 80;
+
+    this.projectile = new Projectile(this);
   }
 
   extractVarsFromGun() {

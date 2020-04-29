@@ -41,48 +41,72 @@ class Game {
     this.characterTurn = 0;
   }
 
-  createsTeam(teamName, teamSize, orientation) {
+  createsTeam(team, teamSize, orientation) {
     const orient = orientation;
 
     for (let i = 0; i < teamSize; i++) {
       const char = new Character(this, orient, 50 + i * 70);
-      const gunVars = char.extractVarsFromChar();
-      const gun = new Gun(this, ...gunVars);
-      const projectileVars = gun.extractVarsFromGun();
-      const proj = new Projectile(this, ...projectileVars);
-
-      teamName.push({ char, gun, proj });
+      team.push(char);
     }
-    teamName.push(orient);
+    team.push(orient);
   }
 
   drawTeam(team) {
-    for (let teamchar of team) {
-      for (let element in teamchar) {
-        switch (element) {
-          case 'char':
-            teamchar[element].draw();
-          case 'gun':
-            teamchar[element].draw();
-        }
+    for (let character of team) {
+      if (character.life > 0) {
+        character.draw();
+        character.gun.draw();
       }
     }
   }
 
   drawTeamsLife(team) {
-    for (let teamchar of team) {
-      for (let element in teamchar) {
-        if (element === 'char') {
-          teamchar[element].drawCharacterLife();
-        }
+    for (let character of team) {
+      if (character.life > 0) {
+        character.drawCharacterLife();
       }
     }
   }
 
+  drawTeamTotalLife(team) {
+    /* let arrayOfTotalLife = [];
+    for (let teamchar of team) {
+      for (let element in teamchar) {
+        if (element === 'char') {
+          arrayOftotalLife.push(teamchar[element].life);
+        }
+      }
+    }
+    */
+    //const totalLife = arrayOfTotalLife.reduce((acc, life) => acc + life, 0);
+
+    // Paint green rectangle on top of red rectangle
+    const context = this.context;
+
+    context.save();
+    context.fillStyle = 'red';
+    context.fillRect(50, 50, 300, 50);
+    /* if (team === this.team1) {
+
+    } else if (team === this.team2) {
+
+    }  */
+
+    context.fillStyle = 'limegreen';
+    context.fillRect(50, 50, 300 * (200 / 300), 50);
+
+    context.restore();
+
+    context.save();
+    context.fillStyle = 'black';
+    context.font = '30px serif';
+    context.fillText('team1', 50, 50);
+    context.restore();
+  }
+
   gameLogic() {
-    //let tempTurn = this.characterTurn;
-    // console.log('inside gamelogic - characterturn', this.characterTurn);
-    // console.log('inside gamelogic - tempturn', tempTurn);
+    this.drawCurrentStatus();
+
     switch (this.characterTurn % 6) {
       case 0: // Team 1 - 0
         this.characterPlays(this.team1, 0, true);
@@ -103,29 +127,15 @@ class Game {
         this.characterPlays(this.team2, 2, true);
         break;
     }
-
-    /* if (tempTurn < this.characterTurn && this.characterTurn <= 6) {
-      setTimeout(() => {
-        console.log('inside settimeout - tempturn', tempTurn);
-        this.gameLogic();
-      }, 1000);
-    } */
   }
-  /*	
-  loop(timestamp) {
-    this.gameLogic();
-    window.requestAnimationFrame((timestamp) => this.loop(timestamp));
-  }
-  */
 
   start() {
-    this.reset();
+    // this.reset();
     this.gameLogic();
-    //this.loop();
-    //this.characterPlays(this.team2, 1);
   }
 
   reset() {
+    this.clearEverything();
     this.ground = new Ground(this);
     this.ground.draw();
 
@@ -135,10 +145,12 @@ class Game {
     this.createsTeam(this.team1, 3, 'right');
     this.drawTeam(this.team1);
     this.drawTeamsLife(this.team1);
+    this.drawTeamTotalLife(this.team1);
 
     this.createsTeam(this.team2, 3, 'left');
     this.drawTeam(this.team2);
     this.drawTeamsLife(this.team2);
+    this.drawTeamTotalLife(this.team2);
   }
 
   clearEverything() {
@@ -146,14 +158,17 @@ class Game {
   }
 
   drawCurrentStatus() {
+    this.clearEverything();
     this.ground.draw();
     this.drawTeam(this.team1);
     this.drawTeam(this.team2);
     this.drawTeamsLife(this.team1);
     this.drawTeamsLife(this.team2);
+    this.drawTeamTotalLife(this.team1);
+    this.drawTeamTotalLife(this.team2);
   }
 
-  characterPlays(teamName, charNumber, run) {
+  characterPlays(teamMembers, charNumber, run) {
     // teamName[charNumber][className].method
     // teamName - array with team chars
     // charNumber - specific char that is being refered
@@ -161,44 +176,41 @@ class Game {
     let runFunction = run;
     //this.charInMotion = true;
     let updateValues;
+
     window.addEventListener('keydown', (event) => {
       // event.preventDefault();
+      const character = teamMembers[charNumber];
+
       if (runFunction) {
         const keyCode = event.keyCode;
         switch (keyCode) {
           case 37: // Left
-            teamName[charNumber]['char'].move('left');
-            updateValues = teamName[charNumber]['char'].extractVarsFromChar();
-            teamName[charNumber]['gun'] = new Gun(this, ...updateValues);
+            character.move('left');
+            character.gun = new Gun(character);
             this.clearEverything();
             this.drawCurrentStatus();
             break;
           case 39: // Right
-            teamName[charNumber]['char'].move('right');
-            updateValues = teamName[charNumber]['char'].extractVarsFromChar();
-            teamName[charNumber]['gun'] = new Gun(this, ...updateValues);
+            character.move('right');
+            character.gun = new Gun(character);
             this.clearEverything();
             this.drawCurrentStatus();
             break;
           case 38: // Up
-            teamName[charNumber]['gun'].pointsTo('up');
-
+            character.gun.pointsTo('up');
             this.clearEverything();
             this.drawCurrentStatus();
             break;
           case 40: // Down
-            teamName[charNumber]['gun'].pointsTo('down');
-
+            character.gun.pointsTo('down');
             this.clearEverything();
             this.drawCurrentStatus();
             break;
           case 32: // Space Bar
             this.clearEverything();
             this.drawCurrentStatus();
-            updateValues = teamName[charNumber]['gun'].extractVarsFromGun();
-            teamName[charNumber]['proj'] = new Projectile(this, ...updateValues);
-
-            teamName[charNumber]['proj'].shootsInMotion(teamName);
+            character.gun.projectile = new Projectile(character.gun);
+            character.gun.projectile.shootsInMotion(teamMembers);
             runFunction = false;
         }
       }

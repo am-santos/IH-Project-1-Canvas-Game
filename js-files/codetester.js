@@ -16,7 +16,6 @@ function noname() {
   }
 }
 
-const name = noname();
-if (name) {
-  console.log(name);
-}
+console.log(a);
+const total = a.reduce((acc, val) => acc + val, 0);
+console.log(total);

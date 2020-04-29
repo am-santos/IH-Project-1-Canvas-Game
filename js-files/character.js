@@ -31,11 +31,18 @@ class Character {
     this.speed = speed || 5;
 
     this.orientation = orientation || 'right';
+
+    this.gun = new Gun(this);
   }
 
   // extractVarsToGun() {
   extractVarsFromChar() {
     return [this.x, this.y, this.width, this.height, this.orientation];
+  }
+
+  charWasHit(damage) {
+    this.life -= damage;
+    this.life < 0 ? (this.life = 0) : this.life;
   }
 
   drawCharacterLife() {

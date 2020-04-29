@@ -8,8 +8,11 @@ context.beginPath();
 
  */
 class Projectile {
-  constructor(game, EndOfGunX, EndOfGunY, orientation, currentAngle, shootingForce, gunWidth) {
-    this.game = game;
+  constructor(gun) {
+    this.gun = gun;
+
+    const { EndOfGunX, EndOfGunY, orientation, currentAngle, shootingForce, gunWidth } = gun;
+    this.game = gun.game;
 
     this.EndOfGunX = EndOfGunX;
     this.EndOfGunY = EndOfGunY;
@@ -43,7 +46,6 @@ class Projectile {
 
     if (this.orientation === 'right') {
       //orientation === 'left'
-
       this.Fx = this.shootingForce * Math.cos(this.currentAngle);
       this.Fy = -1 * this.shootingForce * Math.sin(this.currentAngle);
     } else if (this.orientation === 'left') {
@@ -64,9 +66,14 @@ class Projectile {
 
     this.time += 0.1;
 
-    if (!this.collision(shootingTeam)) {
+    // this.collisionWithEnemies(shootingTeam);
+
+    const collidesWithEnvironment = this.collision(shootingTeam);
+    const collidesWithEnemies = this.collisionWithEnemies(shootingTeam);
+
+    if (!collidesWithEnvironment && !collidesWithEnemies) {
       setTimeout(() => {
-        this.shootsInMotion();
+        this.shootsInMotion(shootingTeam);
       }, this.shootDisplaySpeed);
     }
   }
@@ -74,7 +81,7 @@ class Projectile {
   collision(shootingTeam) {
     //Checks if hit the enemy
 
-    console.log('collision with Enemies', this.collisionWithEnimies());
+    //console.log('collision with Enemies', this.collisionWithEnimies());
     // checks if out of canvas or hit the ground.
     if (
       this.newX + this.gunWidth * 2 > this.game.width || // Right
@@ -86,61 +93,50 @@ class Projectile {
       this.game.eventRuns = false;
       this.game.characterTurn++;
       this.game.gameLogic();
-      console.log('new characterturn value', this.game.characterTurn);
+      //console.log('new characterturn value', this.game.characterTurn);
       return true;
     } else {
       return false;
     }
   }
 
-  collisionWithEnimies(shootingTeam) {
-    // Required variables:
-    // ball location,
-    // Enemies location
-    let teamVarsFromChar = [];
+  collisionWithEnemies(shootingTeam) {
+    const receivingTeam = shootingTeam === this.game.team1 ? this.game.team2 : this.game.team1;
 
-    if (this.game.team1 === shootingTeam) {
-      //Check if collided with team2
-      for (let teamchar of this.game.team2) {
-        for (let obj in teamchar) {
-          if (obj === 'char') {
-            teamVarsFromChar.push(teamchar[obj].extractVarsFromChar());
-          }
-          // [this.x, this.y, this.width, this.height, this.orientation]
-        }
-      }
-      teamVarsFromChar.push(this.game.team2);
-    } else if (this.game.team2 === shootingTeam) {
-      //Check if collided with team1
-      for (let teamchar of this.game.team1) {
-        for (let obj in teamchar) {
-          if (obj === 'char') {
-            teamVarsFromChar.push(teamchar[obj].extractVarsFromChar());
-            // [this.x, this.y, this.width, this.height, this.orientation]
-          }
-        }
-      }
-      teamVarsFromChar.push(this.game.team1);
-    }
+    for (let item of receivingTeam) {
+      const x = item.x;
+      const y = item.y;
+      const width = item.width;
+      const height = item.height;
 
-    // ball.x + ball.radius < block.x && (left side of block)
-    // ball.x - ball.radius < block.x + block.width && (right side of the moon)
-    // ball.y - ball.radius < block.y
-    for (let char = 0; char < teamVarsFromChar.length; char++) {
-      console.log('im inside for lop');
+      // const { x, y, width, height } = item;
+
+      //console.log(x, y, width, height);
+      console.log(item);
+      //check collisions
+
       if (
-        (this.newX + this.gunWidth > teamVarsFromChar[char][0] &&
-          this.newY + this.gunWidth > teamVarsFromChar[char][1]) ||
-        (this.newX - this.gunWidth < teamVarsFromChar[char][0] + teamVarsFromChar[char][2] &&
-          this.newY + this.gunWidth > teamVarsFromChar[char][1])
+        this.newX >= item.x &&
+        this.newX <= item.x + item.width &&
+        this.newY >= item.y &&
+        this.newY <= item.y + item.height
       ) {
-        // char was hit by this ball!!
-        // return [char, teamVarsFromChar[teamVarsFromChar.length - 1]];
-        console.log('im truthy');
+        debugger;
+        item.charWasHit(item.gun.damage);
+
+        this.game.eventRuns = false;
+        this.game.characterTurn++;
+        this.game.gameLogic();
         return true;
+      } else {
+        // console.log(this.newX, x, width);
+        // console.log(this.newX >= x, this.newX <= x + width, this.newY >= y, this.newY <= y + height);
+        return false;
       }
+      // else if (this.newX >= x && this.newX <= x + width && this.newY >= y && this.newY <= y + height) {
+      //   console.log('left to right collision');
+      // }
     }
-    return false;
   }
 
   drawExplosion() {
