@@ -10,12 +10,11 @@ window.addEventListener('load', () => {
 /* const $buttonReset = document.getElementById('reset');
 $buttonReset.addEventListener('click', () => {
   game.reset();
-  game.start();
+  // game.start();
 });
 
 const $buttonStart = document.getElementById('start');
 $buttonStart.addEventListener('click', () => {
   game.reset();
   game.start();
-});
- */
+}); */

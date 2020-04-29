@@ -41,7 +41,7 @@ class Character {
   }
 
   charWasHit(damage) {
-    this.life -= damage;
+    this.life -= Math.floor(damage * Math.random());
     this.life < 0 ? (this.life = 0) : this.life;
   }
 
@@ -116,23 +116,11 @@ class Character {
     if (!this.game.eventRuns) {
       // Prevents it from running when projectile is in motion.
 
-      // LOGICS NEED TO BE CHANGED!!
-      // This logic is working in all characters created..
-
-      // Movement conditions are correct for each case
-
-      if (this.orientation === 'right') {
-        if (direction === 'left') {
-          this.x -= this.speed;
-        } else if (direction === 'right') {
-          this.x += this.speed;
-        }
-      } else if (this.orientation === 'left') {
-        if (direction === 'left') {
-          this.x += this.speed;
-        } else if (direction === 'right') {
-          this.x -= this.speed;
-        }
+      // Movement conditions
+      if (direction === 'left') {
+        this.x -= this.speed;
+      } else if (direction === 'right') {
+        this.x += this.speed;
       }
 
       // Boundary conditions

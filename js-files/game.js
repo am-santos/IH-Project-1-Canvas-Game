@@ -49,7 +49,7 @@ class Game {
     for (let i = 0; i < teamSize; i++) {
       let x = 50 + i * 70;
       if (orientation === 'left') {
-        x = this.width - x;
+        x = this.width - x - 20;
       }
       const char = new Character(this, orientation, x);
       team.push(char);
@@ -74,39 +74,42 @@ class Game {
     }
   }
 
-  drawTeamTotalLife(team) {
-    /* let arrayOfTotalLife = [];
-    for (let teamchar of team) {
-      for (let element in teamchar) {
-        if (element === 'char') {
-          arrayOftotalLife.push(teamchar[element].life);
-        }
-      }
+  calculateTeamLife(team) {
+    let charslife = [];
+    for (let character of team) {
+      charslife.push(character.life);
     }
-    */
-    //const totalLife = arrayOfTotalLife.reduce((acc, life) => acc + life, 0);
 
-    // Paint green rectangle on top of red rectangle
+    return charslife.reduce((acc, value) => acc + value, 0);
+  }
+
+  drawTeamTotalLife(team) {
     const context = this.context;
 
+    const team1TotalLife = this.calculateTeamLife(this.team1);
+    const team2TotalLife = this.calculateTeamLife(this.team2);
+
     context.save();
+    // Draws Loosing life
     context.fillStyle = 'red';
-    context.fillRect(50, 50, 300, 50);
-    /* if (team === this.team1) {
+    context.fillRect(50, 50, 300, 50); // make 300 has total life at the beginning
+    context.fillRect(this.width - 300 - 50, 50, 300, 50); // make 300 has total life at the beginning
 
-    } else if (team === this.team2) {
-
-    }  */
-
+    // Draws Current total life
+    // Team 1
     context.fillStyle = 'limegreen';
-    context.fillRect(50, 50, 300 * (200 / 300), 50);
-
+    context.fillRect(50, 50, 300 * (team1TotalLife / 300), 50);
+    // Team 2
+    context.fillStyle = 'limegreen';
+    context.fillRect(this.width - 300 - 50, 50, 300 * (team2TotalLife / 300), 50);
     context.restore();
 
+    // Writes Team Names
     context.save();
     context.fillStyle = 'black';
-    context.font = '30px serif';
-    context.fillText('team1', 50, 50);
+    context.font = '50px serif';
+    context.fillText('A - Team', 100, 45, 200);
+    context.fillText('B - Team', this.width - 300, 45, 200);
     context.restore();
   }
 
