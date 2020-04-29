@@ -56,22 +56,12 @@ class Character {
     context.fillStyle = 'lime';
     context.font = '15px serif';
     let tempXcoor;
-    if (this.orientation === 'right') {
-      if (this.life < 100) {
-        context.fillText(this.life, this.x + 2, this.y + this.height + this.width, this.width);
-        // fillText coordinates are the left bottom corner of displaying text.
-      } else {
-        context.fillText(this.life, this.x - 1, this.y + this.height + this.width, this.width);
-      }
-    } else if (this.orientation === 'left') {
-      if (this.life < 100) {
-        context.fillText(this.life, this.game.width - this.x - 2, this.y + this.height + this.width, this.width);
-        // fillText coordinates are the left bottom corner of displaying text.
-      } else {
-        context.fillText(this.life, this.game.width - this.x + 1, this.y + this.height + this.width, this.width);
-      }
+    if (this.life < 100) {
+      context.fillText(this.life, this.x + 2, this.y + this.height + this.width, this.width);
+      // fillText coordinates are the left bottom corner of displaying text.
+    } else {
+      context.fillText(this.life, this.x - 1, this.y + this.height + this.width, this.width);
     }
-
     context.restore();
   }
 
@@ -104,16 +94,16 @@ class Character {
       context.save();
       // Character Body
       context.fillStyle = 'brown';
-      context.fillRect(game.width - this.x, this.y, this.width, this.height);
+      context.fillRect(this.x, this.y, this.width, this.height);
 
       // character hat
       context.strokeStyle = 'green';
       context.fillStyle = 'green';
 
       context.beginPath();
-      context.moveTo(game.width - this.x - 5, this.y); // Back size of hat
-      context.lineTo(game.width - this.x + this.width / 2, this.y - 15); // height of hat
-      context.lineTo(game.width - this.x + this.width + 15, this.y); // Front size of hat
+      context.moveTo(this.x - 5, this.y); // Back size of hat
+      context.lineTo(this.x + this.width / 2, this.y - 15); // height of hat
+      context.lineTo(this.x + this.width + 15, this.y); // Front size of hat
       context.closePath();
       context.fill();
       context.stroke();

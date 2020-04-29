@@ -67,7 +67,7 @@ class Gun {
       this.EndOfGunY = this.CenterY + this.length * Math.sin(this.currentAngle);
     } else if (this.orientation === 'left') {
       // Starting coordinates of gun. (same as, center of the character)
-      this.CenterX = game.width - this.x + this.width / 2;
+      this.CenterX = this.x + this.width / 2;
       this.CenterY = this.y + this.height / 2;
 
       // Final coordinates of Gun. (using 45º as default)

@@ -39,16 +39,22 @@ class Game {
     this.eventRuns = false;
 
     this.characterTurn = 0;
+
+    this.playing = false;
+
+    this.setKeyBindings();
   }
 
   createsTeam(team, teamSize, orientation) {
-    const orient = orientation;
-
     for (let i = 0; i < teamSize; i++) {
-      const char = new Character(this, orient, 50 + i * 70);
+      let x = 50 + i * 70;
+      if (orientation === 'left') {
+        x = this.width - x;
+      }
+      const char = new Character(this, orientation, x);
       team.push(char);
     }
-    team.push(orient);
+    // team.push(orient);
   }
 
   drawTeam(team) {
@@ -107,31 +113,19 @@ class Game {
   gameLogic() {
     this.drawCurrentStatus();
 
-    switch (this.characterTurn % 6) {
-      case 0: // Team 1 - 0
-        this.characterPlays(this.team1, 0, true);
-        break;
-      case 1: // Team 2 - 0
-        this.characterPlays(this.team2, 0, true);
-        break;
-      case 2: // Team 1 - 1
-        this.characterPlays(this.team1, 1, true);
-        break;
-      case 3: // Team 2 - 1
-        this.characterPlays(this.team2, 1, true);
-        break;
-      case 4: // Team 1 - 2
-        this.characterPlays(this.team1, 2, true);
-        break;
-      case 5: // Team 2 - 2
-        this.characterPlays(this.team2, 2, true);
-        break;
+    this.currentTeam = this.currentTeam === this.team1 ? this.team2 : this.team1;
+
+    this.currentCharacterIndex++;
+
+    if (this.currentCharacterIndex > 2) {
+      this.currentCharacterIndex = 0;
     }
   }
 
   start() {
     // this.reset();
-    this.gameLogic();
+    // this.gameLogic();
+    this.playing = true;
   }
 
   reset() {
@@ -151,6 +145,9 @@ class Game {
     this.drawTeam(this.team2);
     this.drawTeamsLife(this.team2);
     this.drawTeamTotalLife(this.team2);
+
+    this.currentTeam = this.team1;
+    this.currentCharacterIndex = 0;
   }
 
   clearEverything() {
@@ -168,20 +165,35 @@ class Game {
     this.drawTeamTotalLife(this.team2);
   }
 
-  characterPlays(teamMembers, charNumber, run) {
+  runLogic() {
+    // Corrias a lógica de update de projecteis que estivessem no ar
+  }
+
+  draw() {
+    // Apagas tudo e chamas draw em cada character, projectile, scores, etc
+  }
+
+  loop() {
+    this.runLogic();
+    this.draw();
+    setTimeout(() => {
+      this.loop();
+    }, 1000 / 60);
+  }
+
+  setKeyBindings() {
     // teamName[charNumber][className].method
     // teamName - array with team chars
     // charNumber - specific char that is being refered
     // className - {char,gun,proj} - that represents each class specifications.
-    let runFunction = run;
-    //this.charInMotion = true;
-    let updateValues;
 
     window.addEventListener('keydown', (event) => {
       // event.preventDefault();
-      const character = teamMembers[charNumber];
+      const teamMembers = this.currentTeam;
+      const characterNumber = this.currentCharacterIndex;
+      const character = teamMembers[characterNumber];
 
-      if (runFunction) {
+      if (this.playing && !this.eventRuns) {
         const keyCode = event.keyCode;
         switch (keyCode) {
           case 37: // Left
@@ -211,7 +223,6 @@ class Game {
             this.drawCurrentStatus();
             character.gun.projectile = new Projectile(character.gun);
             character.gun.projectile.shootsInMotion(teamMembers);
-            runFunction = false;
         }
       }
     });

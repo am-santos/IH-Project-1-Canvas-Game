@@ -103,17 +103,13 @@ class Projectile {
   collisionWithEnemies(shootingTeam) {
     const receivingTeam = shootingTeam === this.game.team1 ? this.game.team2 : this.game.team1;
 
+    let collides = false;
+
     for (let item of receivingTeam) {
       const x = item.x;
       const y = item.y;
       const width = item.width;
       const height = item.height;
-
-      // const { x, y, width, height } = item;
-
-      //console.log(x, y, width, height);
-      console.log(item);
-      //check collisions
 
       if (
         this.newX >= item.x &&
@@ -121,22 +117,17 @@ class Projectile {
         this.newY >= item.y &&
         this.newY <= item.y + item.height
       ) {
-        debugger;
+        collides = true;
         item.charWasHit(item.gun.damage);
-
-        this.game.eventRuns = false;
-        this.game.characterTurn++;
-        this.game.gameLogic();
-        return true;
-      } else {
-        // console.log(this.newX, x, width);
-        // console.log(this.newX >= x, this.newX <= x + width, this.newY >= y, this.newY <= y + height);
-        return false;
       }
-      // else if (this.newX >= x && this.newX <= x + width && this.newY >= y && this.newY <= y + height) {
-      //   console.log('left to right collision');
-      // }
     }
+
+    if (collides) {
+      this.game.eventRuns = false;
+      this.game.characterTurn++;
+      this.game.gameLogic();
+    }
+    return collides;
   }
 
   drawExplosion() {
