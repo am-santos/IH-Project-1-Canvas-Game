@@ -22,7 +22,8 @@
     - check if any team has zero char left
     - assign winning team
 */
-const backgroundSound = new Audio('/sounds/2018-10-06_-_Silly_Chicken_-_David_Fesliyan.mp3');
+const shootsFired = new Audio('/sounds/Gun+357+Magnum.mp3');
+
 const backgroundImage = new Image();
 backgroundImage.src = '/images/background-image.png';
 
@@ -46,6 +47,8 @@ class Game {
     this.gameover = false;
 
     this.setKeyBindings();
+
+    this.shootingSound = shootsFired;
   }
 
   createsTeam(team, teamSize, orientation) {
@@ -236,8 +239,6 @@ class Game {
 
     // this.playing = true;
     this.playGame();
-    backgroundSound.loop = true;
-    backgroundSound.play();
   }
 
   playGame() {
@@ -275,9 +276,6 @@ class Game {
 
     this.currentTeam = this.team2;
     this.currentCharacterIndex = -1;
-
-    const shootsFired = new Audio('/sounds/Gun+357+Magnum.mp3');
-    this.shootingSound = shootsFired;
   }
 
   runLogic() {

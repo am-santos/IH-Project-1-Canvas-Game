@@ -1,4 +1,6 @@
 const bombsOnTheMove = new Audio('/sounds/Ticking.mp3');
+const bombExplosion = new Audio('/sounds/Bomb+Explosion.mp3');
+const waterDrops = new Audio('/sounds/420227__14fpanska-nemec-petr__37-2-water-drop-stone.wav');
 
 class Projectile {
   constructor(gun) {
@@ -87,9 +89,10 @@ class Projectile {
       this.game.eventRuns = false;
       this.game.characterTurn++;
       this.game.playGame();
-      // Pauses all sounds
+      // Sounds
       bombsOnTheMove.pause();
       this.game.shootingSound.pause();
+      waterDrops.play();
 
       return true;
     } else {
@@ -128,6 +131,7 @@ class Projectile {
       // Pauses all sounds
       bombsOnTheMove.pause();
       this.game.shootingSound.pause();
+      bombExplosion.play();
 
       this.game.eventRuns = false;
       this.game.characterTurn++;
