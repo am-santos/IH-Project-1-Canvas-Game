@@ -24,6 +24,9 @@ class Character {
     this.width = 20;
     this.height = 40;
 
+    // Character line width
+    this.charLineWidth = 2;
+
     //Character Life
     this.life = 100;
     this.dead = false;
@@ -58,8 +61,8 @@ class Character {
 
     context.save();
     context.beginPath();
-    context.fillStyle = 'blue';
-    context.arc(this.x + this.width / 2, this.y - 30, 5, 0, 2 * Math.PI);
+    context.fillStyle = 'darkblue';
+    context.arc(this.x + this.width / 2, this.y - 30, 3, 0, 2 * Math.PI);
     context.closePath();
     context.stroke();
     context.fill();
@@ -96,12 +99,15 @@ class Character {
     if (this.orientation === 'right') {
       // Character Body
       context.save();
-      context.fillStyle = 'brown';
+      context.fillStyle = 'saddlebrown';
       context.fillRect(this.x, this.y, this.width, this.height);
+      // context.fillStyle = 'whitesmoke';
+      // context.fillRect(this.x + this.charLineWidth, this.y, this.width - this.charLineWidth * 2, this.height);
 
       // character hat
-      context.strokeStyle = 'darkgreen';
-      context.fillStyle = 'darkgreen';
+      context.strokeStyle = 'green';
+      context.lineWidth = this.charLineWidth;
+      context.fillStyle = 'green';
 
       context.beginPath();
       context.moveTo(this.x - 15, this.y); // Back size of hat
@@ -114,11 +120,14 @@ class Character {
     } else if (this.orientation === 'left') {
       context.save();
       // Character Body
-      context.fillStyle = 'brown';
+      context.fillStyle = 'saddlebrown';
       context.fillRect(this.x, this.y, this.width, this.height);
+      // context.fillStyle = 'whitesmoke';
+      // context.fillRect(this.x + this.charLineWidth, this.y, this.width - this.charLineWidth * 2, this.height);
 
       // character hat
       context.strokeStyle = 'green';
+      context.lineWidth = this.charLineWidth;
       context.fillStyle = 'green';
 
       context.beginPath();

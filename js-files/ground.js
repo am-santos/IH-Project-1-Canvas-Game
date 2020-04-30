@@ -10,6 +10,7 @@ class Ground {
     const context = game.context;
 
     context.save();
+    context.fillStyle = 'black';
     context.fillRect(0, game.height - this.groundHeight, game.width, this.groundHeight);
     context.restore();
   }

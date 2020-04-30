@@ -5,6 +5,8 @@
 body {
   display: flex;
   font-family: sans-serif;
+  background-color: whitesmoke;
+  justify-content: center;
 }
 
 section {
@@ -15,7 +17,12 @@ section {
 }
 
 button {
-  width: 200px;
-  height: 50px;
-  font-size: 2em;
+  width: 150px;
+  height: 75px;
+  font-size: 2.2em;
+  position: fixed;
+  left: 50%;
+  margin-left: -75px; /*half the width of the button*/
+  margin-top: 30px;
+  border: 5px solid black;
 }

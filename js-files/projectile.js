@@ -1,12 +1,6 @@
-/* 
+const bomb = new Image();
+bomb.src = '/images/bomb.png';
 
-This class is set to,
-- draw projectile
-context.beginPath();
-  - projectile motion
-  - collision detection
-
- */
 class Projectile {
   constructor(gun) {
     this.gun = gun;
@@ -34,10 +28,13 @@ class Projectile {
     context.save();
     context.beginPath();
     context.fillStyle = 'orange';
+    context.strokeStyle = 'black';
     context.arc(x, y, this.gunWidth, 0, 2 * Math.PI);
     context.closePath();
     context.stroke();
     context.fill();
+    // context.drawImage(bomb, x, y, this.gunWidth * 2, this.gunWidth * 2);
+    // context.drawImage(bomb, x, y, 30, 30);
     context.restore();
   }
 

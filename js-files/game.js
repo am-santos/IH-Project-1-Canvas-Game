@@ -21,10 +21,8 @@
     - update board scores
     - check if any team has zero char left
     - assign winning team
-    
-    
-
 */
+
 class Game {
   constructor($canvas) {
     this.$canvas = $canvas;
@@ -92,24 +90,30 @@ class Game {
     const team2TotalLife = this.calculateTeamLife(this.team2);
 
     context.save();
-    // Draws Loosing life
+    // Draws Border
+    let border = 0.5;
+    context.fillStyle = 'black';
+    context.fillRect(50 - border, 50 - border, 300 + border * 2, 50 + border * 2); // make 300 has total life at the beginning
+    context.fillRect(this.width - 300 - 50 - border, 50 - border, 300 + border * 2, 50 + border * 2); // make 300 has total life at the beginning
+
+    // Draws life's background
     context.fillStyle = 'red';
     context.fillRect(50, 50, 300, 50); // make 300 has total life at the beginning
     context.fillRect(this.width - 300 - 50, 50, 300, 50); // make 300 has total life at the beginning
 
     // Draws Current total life
     // Team 1
-    context.fillStyle = 'limegreen';
+    context.fillStyle = 'lime';
     context.fillRect(50, 50, 300 * (team1TotalLife / 300), 50);
     // Team 2
-    context.fillStyle = 'limegreen';
+    context.fillStyle = 'lime';
     context.fillRect(this.width - 300 - 50, 50, 300 * (team2TotalLife / 300), 50);
     context.restore();
 
     // Writes Team Names
     context.save();
-    context.fillStyle = 'black';
-    context.font = '45px serif';
+    context.fillStyle = 'grey';
+    context.font = '45px sans-serif';
     context.fillText('A - Team', 100, 45, 200);
     context.fillText('B - Team', this.width - 300, 45, 200);
     context.restore();
@@ -212,9 +216,13 @@ class Game {
   }
   start() {
     this.reset();
-    this.setKeyBindings();
+
     // this.playing = true;
     this.playGame();
+
+    /* const bomb = new Image();
+    bomb.src = '/images/bomb.png';
+    this.context.drawImage(bomb, 100, 500 - 50, 30, 30); */
   }
 
   playGame() {
