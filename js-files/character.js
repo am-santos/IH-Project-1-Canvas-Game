@@ -26,7 +26,7 @@ class Character {
 
     //Character Life
     this.life = 100;
-
+    this.dead = false;
     // Movement Speed
     this.speed = speed || 5;
 
@@ -42,7 +42,11 @@ class Character {
 
   charWasHit(damage) {
     this.life -= Math.floor(damage * Math.random());
-    this.life < 0 ? (this.life = 0) : this.life;
+    // this.life < 0 ? (this.life = 0) : this.life;
+    if (this.life < 0) {
+      this.life = 0;
+      this.dead = true;
+    }
   }
 
   drawCharacterLife() {
@@ -123,7 +127,9 @@ class Character {
         this.x += this.speed;
       }
 
-      // Boundary conditions
+      // Team's area boundaries
+
+      // Canvas Boundary conditions
       if (this.x < 0) {
         this.x = 0;
       } else if (this.x > this.game.width - this.width) {

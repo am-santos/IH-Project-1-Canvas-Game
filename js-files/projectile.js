@@ -66,8 +66,6 @@ class Projectile {
 
     this.time += 0.1;
 
-    // this.collisionWithEnemies(shootingTeam);
-
     const collidesWithEnvironment = this.collision(shootingTeam);
     const collidesWithEnemies = this.collisionWithEnemies(shootingTeam);
 
@@ -92,7 +90,7 @@ class Projectile {
     ) {
       this.game.eventRuns = false;
       this.game.characterTurn++;
-      this.game.gameLogic();
+      this.game.playGame();
       //console.log('new characterturn value', this.game.characterTurn);
       return true;
     } else {
@@ -119,13 +117,18 @@ class Projectile {
       ) {
         collides = true;
         item.charWasHit(item.gun.damage);
+
+        const index = receivingTeam.indexOf(item);
+        if (item.dead) {
+          receivingTeam.splice(index, 1);
+        }
       }
     }
 
     if (collides) {
       this.game.eventRuns = false;
       this.game.characterTurn++;
-      this.game.gameLogic();
+      this.game.playGame();
     }
     return collides;
   }

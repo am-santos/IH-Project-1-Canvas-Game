@@ -40,7 +40,9 @@ class Game {
 
     this.characterTurn = 0;
 
-    this.playing = false;
+    // this.playing = false;
+
+    this.gameover = false;
 
     this.setKeyBindings();
   }
@@ -107,28 +109,132 @@ class Game {
     // Writes Team Names
     context.save();
     context.fillStyle = 'black';
-    context.font = '50px serif';
+    context.font = '45px serif';
     context.fillText('A - Team', 100, 45, 200);
     context.fillText('B - Team', this.width - 300, 45, 200);
     context.restore();
   }
 
-  gameLogic() {
+  drawGameOver() {
+    const context = this.context;
+
+    let gameOverWidth = 450;
+    let gameOverHeight = 250;
+    let gameOverBorder = 15;
+
+    let firstLineWidth = 300;
+    let firstLineHeight = 70;
+    let secondLineWidth = 200;
+    let secondLineHeight = 40;
+    let lineMargin = 30;
+
+    // DRAW BOX BORDER
+    if (this.gameover) {
+      context.save();
+      context.fillStyle = 'black';
+      context.fillRect(
+        this.width / 2 - gameOverWidth / 2,
+        this.height / 2 - gameOverHeight / 2,
+        gameOverWidth,
+        gameOverHeight
+      );
+
+      context.fillStyle = 'white';
+      context.fillRect(
+        this.width / 2 - gameOverWidth / 2 + gameOverBorder,
+        this.height / 2 - gameOverHeight / 2 + gameOverBorder,
+        gameOverWidth - gameOverBorder * 2,
+        gameOverHeight - gameOverBorder * 2
+      );
+
+      // DRAW TEXT
+      context.fillStyle = 'black';
+      // First Line
+      context.font = '60px serif';
+      context.fillText(
+        this.winner + ' beats',
+        this.width / 2 - firstLineWidth / 2,
+        this.height / 2 - lineMargin / 2,
+        firstLineWidth
+      );
+      // Second Line
+      context.font = '30px serif';
+      context.fillText(
+        this.looser + ' by ' + this.winnerPoints + ' points.',
+        this.width / 2 - firstLineWidth / 2,
+        this.height / 2 + lineMargin / 2 + secondLineHeight,
+        secondLineWidth
+      );
+
+      context.restore();
+    }
+  }
+
+  clearEverything() {
+    this.context.clearRect(0, 0, this.width, this.height);
+  }
+
+  drawCurrentStatus() {
+    this.clearEverything();
+    this.ground.draw();
+    this.drawTeam(this.team1);
+    this.drawTeam(this.team2);
+    this.drawTeamsLife(this.team1);
+    this.drawTeamsLife(this.team2);
+    this.drawTeamTotalLife(this.team1);
+    this.drawTeamTotalLife(this.team2);
+  }
+
+  characterTurnLogic() {
     this.drawCurrentStatus();
 
     this.currentTeam = this.currentTeam === this.team1 ? this.team2 : this.team1;
 
     this.currentCharacterIndex++;
 
-    if (this.currentCharacterIndex > 2) {
-      this.currentCharacterIndex = 0;
+    if (this.currentCharacterIndex > this.currentTeam.length - 1) {
+      this.currentCharacterIndex = Math.floor(this.currentTeam.length * Math.random());
     }
   }
 
+  gameOverLogic() {
+    if (this.team1.length === 0) {
+      this.gameover = true;
+      this.winner = 'B - Team';
+      this.looser = 'A - Team';
+      this.winnerPoints = this.calculateTeamLife(this.team2);
+    } else if (this.team2.length === 0) {
+      this.gameover = true;
+      this.winner = 'A - Team';
+      this.looser = 'B - Team';
+      this.winnerPoints = this.calculateTeamLife(this.team1);
+    }
+  }
   start() {
-    // this.reset();
-    // this.gameLogic();
-    this.playing = true;
+    this.reset();
+    this.setKeyBindings();
+    // this.playing = true;
+    this.playGame();
+  }
+
+  playGame() {
+    this.gameLogic();
+    this.gameDraw();
+  }
+
+  gameLogic() {
+    this.characterTurnLogic();
+    this.gameOverLogic();
+  }
+
+  gameDraw() {
+    this.clearEverything();
+    if (this.gameover) {
+      this.drawCurrentStatus();
+      this.drawGameOver();
+    } else {
+      this.drawCurrentStatus();
+    }
   }
 
   reset() {
@@ -149,23 +255,8 @@ class Game {
     this.drawTeamsLife(this.team2);
     this.drawTeamTotalLife(this.team2);
 
-    this.currentTeam = this.team1;
-    this.currentCharacterIndex = 0;
-  }
-
-  clearEverything() {
-    this.context.clearRect(0, 0, this.width, this.height);
-  }
-
-  drawCurrentStatus() {
-    this.clearEverything();
-    this.ground.draw();
-    this.drawTeam(this.team1);
-    this.drawTeam(this.team2);
-    this.drawTeamsLife(this.team1);
-    this.drawTeamsLife(this.team2);
-    this.drawTeamTotalLife(this.team1);
-    this.drawTeamTotalLife(this.team2);
+    this.currentTeam = this.team2;
+    this.currentCharacterIndex = -1;
   }
 
   runLogic() {
@@ -196,7 +287,8 @@ class Game {
       const characterNumber = this.currentCharacterIndex;
       const character = teamMembers[characterNumber];
 
-      if (this.playing && !this.eventRuns) {
+      // if (this.playing && !this.eventRuns && !this.gameover) {
+      if (!this.eventRuns && !this.gameover) {
         const keyCode = event.keyCode;
         switch (keyCode) {
           case 37: // Left
