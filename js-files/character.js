@@ -49,6 +49,23 @@ class Character {
     }
   }
 
+  drawCharTurn() {
+    const game = this.game;
+    const context = game.context;
+
+    // Character Y coordinate
+    this.y = this.game.height - this.height - this.game.ground.groundHeight;
+
+    context.save();
+    context.beginPath();
+    context.fillStyle = 'blue';
+    context.arc(this.x + this.width / 2, this.y - 30, 5, 0, 2 * Math.PI);
+    context.closePath();
+    context.stroke();
+    context.fill();
+    context.restore();
+  }
+
   drawCharacterLife() {
     const game = this.game;
     const context = game.context;
@@ -128,6 +145,11 @@ class Character {
       }
 
       // Team's area boundaries
+      if (this.orientation === 'right' && this.x > this.game.teamsGameArea) {
+        this.x = this.game.teamsGameArea;
+      } else if (this.orientation === 'left' && this.x < this.game.width - this.game.teamsGameArea) {
+        this.x = this.game.width - this.game.teamsGameArea;
+      }
 
       // Canvas Boundary conditions
       if (this.x < 0) {

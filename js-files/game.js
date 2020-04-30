@@ -40,7 +40,7 @@ class Game {
 
     this.characterTurn = 0;
 
-    // this.playing = false;
+    this.teamsGameArea = this.width * 0.35;
 
     this.gameover = false;
 
@@ -286,7 +286,6 @@ class Game {
       const teamMembers = this.currentTeam;
       const characterNumber = this.currentCharacterIndex;
       const character = teamMembers[characterNumber];
-
       // if (this.playing && !this.eventRuns && !this.gameover) {
       if (!this.eventRuns && !this.gameover) {
         const keyCode = event.keyCode;
@@ -296,22 +295,26 @@ class Game {
             character.gun = new Gun(character);
             this.clearEverything();
             this.drawCurrentStatus();
+            character.drawCharTurn();
             break;
           case 39: // Right
             character.move('right');
             character.gun = new Gun(character);
             this.clearEverything();
             this.drawCurrentStatus();
+            character.drawCharTurn();
             break;
           case 38: // Up
             character.gun.pointsTo('up');
             this.clearEverything();
             this.drawCurrentStatus();
+            character.drawCharTurn();
             break;
           case 40: // Down
             character.gun.pointsTo('down');
             this.clearEverything();
             this.drawCurrentStatus();
+            character.drawCharTurn();
             break;
           case 32: // Space Bar
             this.clearEverything();
