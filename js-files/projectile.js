@@ -1,5 +1,4 @@
-const bomb = new Image();
-bomb.src = '/images/bomb.png';
+const bombsOnTheMove = new Audio('/sounds/Ticking.mp3');
 
 class Projectile {
   constructor(gun) {
@@ -60,7 +59,7 @@ class Projectile {
     this.game.clearEverything();
     this.game.drawCurrentStatus();
     this.draw(this.newX, this.newY);
-
+    bombsOnTheMove.play();
     this.time += 0.1;
 
     const collidesWithEnvironment = this.collision(shootingTeam);
@@ -88,7 +87,10 @@ class Projectile {
       this.game.eventRuns = false;
       this.game.characterTurn++;
       this.game.playGame();
-      //console.log('new characterturn value', this.game.characterTurn);
+      // Pauses all sounds
+      bombsOnTheMove.pause();
+      this.game.shootingSound.pause();
+
       return true;
     } else {
       return false;
@@ -123,6 +125,10 @@ class Projectile {
     }
 
     if (collides) {
+      // Pauses all sounds
+      bombsOnTheMove.pause();
+      this.game.shootingSound.pause();
+
       this.game.eventRuns = false;
       this.game.characterTurn++;
       this.game.playGame();

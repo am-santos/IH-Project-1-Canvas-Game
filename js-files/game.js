@@ -22,6 +22,9 @@
     - check if any team has zero char left
     - assign winning team
 */
+const backgroundSound = new Audio('/sounds/2018-10-06_-_Silly_Chicken_-_David_Fesliyan.mp3');
+const backgroundImage = new Image();
+backgroundImage.src = '/images/background-image.png';
 
 class Game {
   constructor($canvas) {
@@ -88,34 +91,43 @@ class Game {
 
     const team1TotalLife = this.calculateTeamLife(this.team1);
     const team2TotalLife = this.calculateTeamLife(this.team2);
+    // Dimensions
+    const boxWidth = 300;
+    const bodHeight = 30;
+    const distFromTop = 60;
+    const border = 0.5;
 
     context.save();
     // Draws Border
-    let border = 0.5;
     context.fillStyle = 'black';
-    context.fillRect(50 - border, 50 - border, 300 + border * 2, 50 + border * 2); // make 300 has total life at the beginning
-    context.fillRect(this.width - 300 - 50 - border, 50 - border, 300 + border * 2, 50 + border * 2); // make 300 has total life at the beginning
+    context.fillRect(bodHeight - border, distFromTop - border, boxWidth + border * 2, bodHeight + border * 2); // make boxWidth has total life at the beginning
+    context.fillRect(
+      this.width - boxWidth - bodHeight - border,
+      distFromTop - border,
+      boxWidth + border * 2,
+      bodHeight + border * 2
+    ); // make boxWidth has total life at the beginning
 
     // Draws life's background
     context.fillStyle = 'red';
-    context.fillRect(50, 50, 300, 50); // make 300 has total life at the beginning
-    context.fillRect(this.width - 300 - 50, 50, 300, 50); // make 300 has total life at the beginning
+    context.fillRect(bodHeight, distFromTop, boxWidth, bodHeight); // make boxWidth has total life at the beginning
+    context.fillRect(this.width - boxWidth - bodHeight, distFromTop, boxWidth, bodHeight); // make boxWidth has total life at the beginning
 
     // Draws Current total life
     // Team 1
     context.fillStyle = 'lime';
-    context.fillRect(50, 50, 300 * (team1TotalLife / 300), 50);
+    context.fillRect(bodHeight, distFromTop, boxWidth * (team1TotalLife / boxWidth), bodHeight);
     // Team 2
     context.fillStyle = 'lime';
-    context.fillRect(this.width - 300 - 50, 50, 300 * (team2TotalLife / 300), 50);
+    context.fillRect(this.width - boxWidth - bodHeight, distFromTop, boxWidth * (team2TotalLife / boxWidth), bodHeight);
     context.restore();
 
     // Writes Team Names
     context.save();
-    context.fillStyle = 'grey';
+    context.fillStyle = 'white';
     context.font = '45px sans-serif';
     context.fillText('A - Team', 100, 45, 200);
-    context.fillText('B - Team', this.width - 300, 45, 200);
+    context.fillText('B - Team', this.width - boxWidth, 45, 200);
     context.restore();
   }
 
@@ -178,9 +190,14 @@ class Game {
     this.context.clearRect(0, 0, this.width, this.height);
   }
 
+  drawBackGroundImage() {
+    this.context.drawImage(backgroundImage, 0, 0, this.width, this.height);
+  }
+
   drawCurrentStatus() {
     this.clearEverything();
-    this.ground.draw();
+    // this.ground.draw();
+    this.drawBackGroundImage();
     this.drawTeam(this.team1);
     this.drawTeam(this.team2);
     this.drawTeamsLife(this.team1);
@@ -219,10 +236,8 @@ class Game {
 
     // this.playing = true;
     this.playGame();
-
-    /* const bomb = new Image();
-    bomb.src = '/images/bomb.png';
-    this.context.drawImage(bomb, 100, 500 - 50, 30, 30); */
+    backgroundSound.loop = true;
+    backgroundSound.play();
   }
 
   playGame() {
@@ -246,25 +261,23 @@ class Game {
   }
 
   reset() {
-    this.clearEverything();
+    // this.clearEverything();
     this.ground = new Ground(this);
-    this.ground.draw();
+    // this.ground.draw();
 
     this.team1 = [];
     this.team2 = [];
 
     this.createsTeam(this.team1, 3, 'right');
-    this.drawTeam(this.team1);
-    this.drawTeamsLife(this.team1);
-    this.drawTeamTotalLife(this.team1);
-
     this.createsTeam(this.team2, 3, 'left');
-    this.drawTeam(this.team2);
-    this.drawTeamsLife(this.team2);
-    this.drawTeamTotalLife(this.team2);
+
+    this.drawCurrentStatus();
 
     this.currentTeam = this.team2;
     this.currentCharacterIndex = -1;
+
+    const shootsFired = new Audio('/sounds/Gun+357+Magnum.mp3');
+    this.shootingSound = shootsFired;
   }
 
   runLogic() {
@@ -327,6 +340,7 @@ class Game {
           case 32: // Space Bar
             this.clearEverything();
             this.drawCurrentStatus();
+            this.shootingSound.play();
             character.gun.projectile = new Projectile(character.gun);
             character.gun.projectile.shootsInMotion(teamMembers);
         }

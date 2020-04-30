@@ -2,7 +2,7 @@ class Ground {
   constructor(game) {
     this.game = game;
 
-    this.groundHeight = 100;
+    this.groundHeight = 156;
   }
 
   draw() {

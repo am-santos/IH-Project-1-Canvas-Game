@@ -26,7 +26,7 @@ class Gun {
 
     // Char current values of,
     this.x = x; //Coordinates of body
-    this.y = y || 360; //Coordinates of body
+    this.y = y || 500 - 156 - 40; //Coordinates of body = canvas.hight - ground.hight - char.hight
     this.width = width; // char body
     this.height = height; // char body
     this.orientation = orientation; // where is looking at
@@ -112,17 +112,4 @@ class Gun {
       this.currentAngle = this.angle;
     }
   }
-
-  /* drawProjectile(x, y) {
-    const context = this.game.context;
-
-    context.save();
-    context.fillStyle = 'black';
-    context.beginPath();
-    context.arc(x, y, this.width, 0, 2 * Math.PI);
-    context.closePath();
-    context.stroke();
-    context.fill();
-    context.restore();
-  } */
 }
