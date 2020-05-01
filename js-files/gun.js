@@ -36,7 +36,7 @@ class Gun {
     this.gunWidth = 5;
 
     // Gun Damage
-    this.damage = 67;
+    this.damage = 99;
 
     // Pointing angle
     this.angle = -1 * 0.15 * Math.PI;

@@ -233,7 +233,6 @@ class Game {
   }
 
   start() {
-    console.log('start is running');
     //debugger;
     this.reset();
     backgroundSound.play();
@@ -241,13 +240,11 @@ class Game {
   }
 
   playGame() {
-    console.log('playgame is running');
     this.gameLogic();
     this.gameDraw();
   }
 
   gameLogic() {
-    console.log('gameLogic is running');
     this.characterTurnLogic();
     this.gameOverLogic();
   }
@@ -263,7 +260,6 @@ class Game {
   }
 
   resetCharacterTurn() {
-    console.log('reset char Turn is running');
     this.currentTeam = this.team2;
     this.currentCharacterIndex = -1;
 
@@ -275,7 +271,6 @@ class Game {
   }
 
   reset() {
-    console.log('reset is running');
     this.clearEverything();
     this.ground = new Ground(this);
     // this.ground.draw();
