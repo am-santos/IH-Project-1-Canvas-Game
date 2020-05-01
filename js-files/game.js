@@ -23,7 +23,8 @@
     - assign winning team
 */
 const shootsFired = new Audio('/sounds/Gun+357+Magnum.mp3');
-
+const backgroundSound = new Audio('/sounds/2018-10-06_-_Silly_Chicken_-_David_Fesliyan.mp3');
+backgroundSound.loop = true;
 const backgroundImage = new Image();
 backgroundImage.src = '/images/background-image.png';
 
@@ -35,16 +36,12 @@ class Game {
     this.width = $canvas.width;
     this.height = $canvas.height;
 
-    // this.team1 = [];
-    // this.team2 = [];
-
-    this.eventRuns = false;
-
-    this.characterTurn = 0;
-
     this.teamsGameArea = this.width * 0.35;
 
+    this.eventRuns = false;
     this.gameover = false;
+
+    this.characterTurn = 0;
 
     this.setKeyBindings();
 
@@ -199,7 +196,6 @@ class Game {
 
   drawCurrentStatus() {
     this.clearEverything();
-    // this.ground.draw();
     this.drawBackGroundImage();
     this.drawTeam(this.team1);
     this.drawTeam(this.team2);
@@ -211,6 +207,7 @@ class Game {
 
   characterTurnLogic() {
     this.drawCurrentStatus();
+    console.log('character turn logic is running');
 
     this.currentTeam = this.currentTeam === this.team1 ? this.team2 : this.team1;
 
@@ -234,19 +231,23 @@ class Game {
       this.winnerPoints = this.calculateTeamLife(this.team1);
     }
   }
-  start() {
-    this.reset();
 
-    // this.playing = true;
+  start() {
+    console.log('start is running');
+    //debugger;
+    this.reset();
+    backgroundSound.play();
     this.playGame();
   }
 
   playGame() {
+    console.log('playgame is running');
     this.gameLogic();
     this.gameDraw();
   }
 
   gameLogic() {
+    console.log('gameLogic is running');
     this.characterTurnLogic();
     this.gameOverLogic();
   }
@@ -261,24 +262,42 @@ class Game {
     }
   }
 
+  resetCharacterTurn() {
+    console.log('reset char Turn is running');
+    this.currentTeam = this.team2;
+    this.currentCharacterIndex = -1;
+
+    // constructor variables
+    this.eventRuns = false;
+    this.gameover = false;
+
+    this.characterTurn = 0;
+  }
+
   reset() {
-    // this.clearEverything();
+    console.log('reset is running');
+    this.clearEverything();
     this.ground = new Ground(this);
     // this.ground.draw();
-
     this.team1 = [];
     this.team2 = [];
 
     this.createsTeam(this.team1, 3, 'right');
     this.createsTeam(this.team2, 3, 'left');
-
     this.drawCurrentStatus();
-
-    this.currentTeam = this.team2;
-    this.currentCharacterIndex = -1;
+    this.resetCharacterTurn();
   }
 
-  runLogic() {
+  drawFirstScreen() {
+    console.log('im running');
+    const gameInstructions = new Image();
+    gameInstructions.src = '/images/game-instructions.png';
+    gameInstructions.addEventListener('load', () => {
+      this.context.drawImage(gameInstructions, 50, 120, this.width - 50 * 2, this.height - 150);
+    });
+  }
+
+  /* runLogic() {
     // Corrias a lógica de update de projecteis que estivessem no ar
   }
 
@@ -292,20 +311,13 @@ class Game {
     setTimeout(() => {
       this.loop();
     }, 1000 / 60);
-  }
+  } */
 
   setKeyBindings() {
-    // teamName[charNumber][className].method
-    // teamName - array with team chars
-    // charNumber - specific char that is being refered
-    // className - {char,gun,proj} - that represents each class specifications.
-
     window.addEventListener('keydown', (event) => {
-      // event.preventDefault();
       const teamMembers = this.currentTeam;
       const characterNumber = this.currentCharacterIndex;
       const character = teamMembers[characterNumber];
-      // if (this.playing && !this.eventRuns && !this.gameover) {
       if (!this.eventRuns && !this.gameover) {
         const keyCode = event.keyCode;
         switch (keyCode) {
@@ -336,6 +348,7 @@ class Game {
             character.drawCharTurn();
             break;
           case 32: // Space Bar
+            event.preventDefault();
             this.clearEverything();
             this.drawCurrentStatus();
             this.shootingSound.play();

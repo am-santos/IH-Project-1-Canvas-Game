@@ -77,17 +77,16 @@ class Projectile {
   collision(shootingTeam) {
     //Checks if hit the enemy
 
-    //console.log('collision with Enemies', this.collisionWithEnimies());
+    // console.log('collision with Enemies', this.collisionWithEnimies());
     // checks if out of canvas or hit the ground.
     if (
       this.newX + this.gunWidth * 2 > this.game.width || // Right
       this.newX - this.gunWidth * 2 < 0 || // Left
       this.newY + this.gunWidth * 2 > this.game.height - this.game.ground.groundHeight || // Ground
       this.newY - this.gunWidth * 2 < 0 // Top
-      // this.collisionWithEnimies(shootingTeam) // Method that checks collision with enemies.
     ) {
       this.game.eventRuns = false;
-      this.game.characterTurn++;
+      // this.game.characterTurn++;
       this.game.playGame();
       // Sounds
       bombsOnTheMove.pause();
