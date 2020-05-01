@@ -168,7 +168,7 @@ class Game {
       // First Line
       context.font = '60px serif';
       context.fillText(
-        this.winner + ' beats',
+        this.winner + ' wins',
         this.width / 2 - firstLineWidth / 2,
         this.height / 2 - lineMargin / 2,
         firstLineWidth
@@ -176,7 +176,8 @@ class Game {
       // Second Line
       context.font = '30px serif';
       context.fillText(
-        this.looser + ' by ' + this.winnerPoints + ' points.',
+        // this.looser + ' by ' + this.winnerPoints + ' points.',
+        'by ' + this.winnerPoints + ' points.',
         this.width / 2 - firstLineWidth / 2,
         this.height / 2 + lineMargin / 2 + secondLineHeight,
         secondLineWidth
