@@ -1,6 +1,6 @@
 # IronHack - 1st Project - Canvas Game
 
-Based on Worms Armageddon game, this project was developed in one week after two weeks of learning JS.
+Based on Worms Armageddon game.
 
 In this game there are two teams fighting against each other. One turn per team. 
 On each turn a randomly selected character can shoot. 
