@@ -1,7 +1,7 @@
 # Tree's Armageddon
 
 ## Canvas Game
-### Web Development Bootcamp's Project
+#### Web Development Bootcamp's Project
 
 A game based on Worms Armageddon.
 
