@@ -22,11 +22,11 @@
     - check if any team has zero char left
     - assign winning team
 */
-const shootsFired = new Audio('/sounds/Gun+357+Magnum.mp3');
-const backgroundSound = new Audio('/sounds/2018-10-06_-_Silly_Chicken_-_David_Fesliyan.mp3');
+const shootsFired = new Audio('sounds/Gun+357+Magnum.mp3');
+const backgroundSound = new Audio('sounds/2018-10-06_-_Silly_Chicken_-_David_Fesliyan.mp3');
 backgroundSound.loop = true;
 const backgroundImage = new Image();
-backgroundImage.src = '/images/background-image.png';
+backgroundImage.src = 'images/background-image.png';
 
 class Game {
   constructor($canvas) {
@@ -100,7 +100,12 @@ class Game {
     context.save();
     // Draws Border
     context.fillStyle = 'black';
-    context.fillRect(bodHeight - border, distFromTop - border, boxWidth + border * 2, bodHeight + border * 2); // make boxWidth has total life at the beginning
+    context.fillRect(
+      bodHeight - border,
+      distFromTop - border,
+      boxWidth + border * 2,
+      bodHeight + border * 2
+    ); // make boxWidth has total life at the beginning
     context.fillRect(
       this.width - boxWidth - bodHeight - border,
       distFromTop - border,
@@ -119,7 +124,12 @@ class Game {
     context.fillRect(bodHeight, distFromTop, boxWidth * (team1TotalLife / boxWidth), bodHeight);
     // Team 2
     context.fillStyle = 'lime';
-    context.fillRect(this.width - boxWidth - bodHeight, distFromTop, boxWidth * (team2TotalLife / boxWidth), bodHeight);
+    context.fillRect(
+      this.width - boxWidth - bodHeight,
+      distFromTop,
+      boxWidth * (team2TotalLife / boxWidth),
+      bodHeight
+    );
     context.restore();
 
     // Writes Team Names
@@ -176,7 +186,6 @@ class Game {
       // Second Line
       context.font = '30px serif';
       context.fillText(
-        // this.looser + ' by ' + this.winnerPoints + ' points.',
         'by ' + this.winnerPoints + ' points.',
         this.width / 2 - firstLineWidth / 2,
         this.height / 2 + lineMargin / 2 + secondLineHeight,
@@ -208,7 +217,6 @@ class Game {
 
   characterTurnLogic() {
     this.drawCurrentStatus();
-    console.log('character turn logic is running');
 
     this.currentTeam = this.currentTeam === this.team1 ? this.team2 : this.team1;
 
@@ -234,7 +242,6 @@ class Game {
   }
 
   start() {
-    //debugger;
     this.reset();
     backgroundSound.play();
     this.playGame();
@@ -274,7 +281,6 @@ class Game {
   reset() {
     this.clearEverything();
     this.ground = new Ground(this);
-    // this.ground.draw();
     this.team1 = [];
     this.team2 = [];
 
@@ -287,27 +293,11 @@ class Game {
   drawFirstScreen() {
     console.log('im running');
     const gameInstructions = new Image();
-    gameInstructions.src = '/images/game-instructions.png';
+    gameInstructions.src = 'images/game-instructions.png';
     gameInstructions.addEventListener('load', () => {
       this.context.drawImage(gameInstructions, 50, 120, this.width - 50 * 2, this.height - 150);
     });
   }
-
-  /* runLogic() {
-    // Corrias a lógica de update de projecteis que estivessem no ar
-  }
-
-  draw() {
-    // Apagas tudo e chamas draw em cada character, projectile, scores, etc
-  }
-
-  loop() {
-    this.runLogic();
-    this.draw();
-    setTimeout(() => {
-      this.loop();
-    }, 1000 / 60);
-  } */
 
   setKeyBindings() {
     window.addEventListener('keydown', (event) => {

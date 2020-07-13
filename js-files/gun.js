@@ -40,7 +40,6 @@ class Gun {
 
     // Pointing angle
     this.angle = -1 * 0.15 * Math.PI;
-    // this.angle = 0;
     this.speedOfAngleChanges = 0.05 * ((1 / 2) * Math.PI);
     this.currentAngle = this.angle;
 

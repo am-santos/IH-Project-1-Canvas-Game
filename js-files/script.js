@@ -12,18 +12,6 @@ $buttonStart.addEventListener('click', () => {
   game.start();
 });
 
-/*
--
--
--
--
--
--
--
--
--
-*/
-
 /* const $buttonReset = document.getElementById('reset');
 $buttonReset.addEventListener('click', () => {
   game.reset();
